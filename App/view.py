@@ -22,6 +22,10 @@
 
 import sys
 import config
+from DISClib.ADT import list as lt
+from DISClib.DataStructures import arraylistiterator as it
+from DISClib.ADT import orderedmap as om
+from DISClib.ADT import map as m
 from App import controller
 assert config
 
@@ -31,13 +35,20 @@ Presenta el menu de opciones  y  por cada seleccion
 hace la solicitud al controlador para ejecutar la
 operación seleccionada.
 """
+def impresor_de_datos_elefante_de_batalla_psiquico_ancestral(lista):
+    A = it.newIterator(lista)
+    while it.hasNext(A):
+        B = it.next(A)
+        print(B)
+        print("🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞🍞")
 
 # ___________________________________________________
 #  Ruta a los archivos
 # ___________________________________________________
 
 
-crimefile = 'crime-utf8.csv'
+file = "us_accidents_small.csv"
+#file = "US_Accidents_Dec19.csv"
 
 # ___________________________________________________
 #  Menu principal
@@ -52,7 +63,10 @@ def printMenu():
     print("2- Cargar información de accidentes")
     print("3- Requerimento 1")
     print("4- Requerimento 2")
+    print("6- Requerimento 4")
+    print("7- Requerimento 5")
     print("0- Salir")
+    
     print("*******************************************")
 
 
@@ -65,17 +79,40 @@ while True:
 
     if int(inputs[0]) == 1:
         print("\nInicializando....")
-        # cont es el controlador que se usará de acá en adelante
-        cont = controller.init()
+        # analyzer es el controlador que se usará de acá en adelante
+        analyzer = controller.init()
+        print("\nAnalizador cargado.")
 
     elif int(inputs[0]) == 2:
-        print("\nCargando información de crimenes ....")
-
+        print("\nCargando información de accidentes ....")
+        controller.loadData(analyzer, file)
+        print("\nInformacion caragada exitosamente")
+        print("Se cargaron",m.size(analyzer["accidentes"]),"elementos.")
+        print("altura del arbol fechas",om.height(analyzer["index"]))
+        print("elementos del arbol fechas",om.size(analyzer["index"]))
+        print("tamaño del arbol horas",om.height(analyzer["index_horas"]))
+        print("elementos del arbol horas",om.size(analyzer["index_horas"]))
     elif int(inputs[0]) == 3:
-        print("\nBuscando crimenes en un rango de fechas: ")
+        criterio = input(str("\nBuscando accidentes en un rango de fechas: "))
+        Monika = controller.obtener_accidentes_por_fecha(analyzer, criterio)
+        impresor_de_datos_elefante_de_batalla_psiquico_ancestral(Monika)
 
     elif int(inputs[0]) == 4:
         print("\nRequerimiento No 1 del reto 3: ")
+
+    elif int(inputs[0]) == 6:
+        Fecha1 = input("Fecha inicial:")
+        Fecha2 = input("Fecha final:")
+        A = controller.estado_y_fecha_con_mas_casos(analyzer, Fecha1, Fecha2)
+        print(A)
+
+    elif int(inputs[0]) == 7:
+        Hora1 = input("Hora inicial:")
+        Hora2 = input("Hora final:")
+        #A = controller.prueba(Hora1, Hora2)
+        A = controller.numero_de_accidentes_por_hora(analyzer, Hora1, Hora2)
+        print (A)
+
 
     else:
         sys.exit(0)
