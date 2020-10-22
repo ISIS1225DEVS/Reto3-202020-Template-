@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  """
-
+from time import process_time
 import sys
 import config
 from App import controller
@@ -37,7 +37,7 @@ operación seleccionada.
 # ___________________________________________________
 
 
-crimefile = 'crime-utf8.csv'
+accidentfile = 'us_accidents_small.csv'
 
 # ___________________________________________________
 #  Menu principal
@@ -50,8 +50,7 @@ def printMenu():
     print("Bienvenido")
     print("1- Inicializar Analizador")
     print("2- Cargar información de accidentes")
-    print("3- Requerimento 1")
-    print("4- Requerimento 2")
+    print("3- Buscar accidentes dentro de un rango de fechas")
     print("0- Salir")
     print("*******************************************")
 
@@ -64,18 +63,29 @@ while True:
     inputs = input('Seleccione una opción para continuar\n>')
 
     if int(inputs[0]) == 1:
+        t1_start = process_time()
         print("\nInicializando....")
         # cont es el controlador que se usará de acá en adelante
         cont = controller.init()
-
+        print('Tiempo de ejecución ', process_time() - t1_start, ' segundos')
     elif int(inputs[0]) == 2:
-        print("\nCargando información de crimenes ....")
-
+        t1_start = process_time()
+        print("\nCargando información de los accidentes ....")
+        controller.loadData(cont, accidentfile)
+        print('Accidentes cargados: ' + str(controller.accidentsSize(cont)))
+        print('Altura del arbol: ' + str(controller.indexHeight(cont)))
+        print('Elementos en el arbol: ' + str(controller.indexSize(cont)))
+        print('Menor Llave: ' + str(controller.minKey(cont)))
+        print('Mayor Llave: ' + str(controller.maxKey(cont)))
+        print('Tiempo de ejecución ', process_time() - t1_start, ' segundos')
     elif int(inputs[0]) == 3:
-        print("\nBuscando crimenes en un rango de fechas: ")
-
-    elif int(inputs[0]) == 4:
-        print("\nRequerimiento No 1 del reto 3: ")
+        t1_start = process_time()
+        print("\nBuscando accidentes en un rango de fechas: ")
+        initialDate = input("Rango Inicial (YYYY-MM-DD): ")
+        finalDate = input("Rango Final (YYYY-MM-DD): ")
+        total = controller.getAccidentsByRange(cont, initialDate, finalDate)
+        print("\nTotal de accidentes en el rango de fechas: " + str(total))
+        print('Tiempo de ejecución ', process_time() - t1_start, ' segundos')
 
     else:
         sys.exit(0)

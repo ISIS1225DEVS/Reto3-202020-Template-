@@ -42,8 +42,9 @@ def init():
     """
     Llama la funcion de inicializacion del modelo.
     """
-
-    return None
+    analyzer = model.newAnalyzer()
+    return analyzer
+    
 
 
 # ___________________________________________________
@@ -55,9 +56,68 @@ def loadData(analyzer, accidentsfile):
     """
     Carga los datos de los archivos CSV en el modelo
     """
-    
+    accidentsfile = cf.data_dir + accidentsfile
+    input_file = csv.DictReader(open(accidentsfile, encoding="utf-8"),
+                                delimiter=",")
+    for accident in input_file:
+        model.addAccident(analyzer, accident)
     return analyzer
 
 # ___________________________________________________
 #  Funciones para consultas
 # ___________________________________________________
+
+def accidentsSize(analyzer):
+    """
+    Numero de accidentes leidos
+    """
+    return model.accidentsSize(analyzer)
+
+
+def indexHeight(analyzer):
+    """
+    Altura del indice (arbol)
+    """
+    return model.indexHeight(analyzer)
+
+
+def indexSize(analyzer):
+    """
+    Numero de nodos en el arbol
+    """
+    return model.indexSize(analyzer)
+
+
+def minKey(analyzer):
+    """
+    La menor llave del arbol
+    """
+    return model.minKey(analyzer)
+
+
+def maxKey(analyzer):
+    """
+    La mayor llave del arbol
+    """
+    return model.maxKey(analyzer)
+
+
+def getAccidentsByRange(analyzer, initialDate, finalDate):
+    """
+    Retorna el total de crimenes en un rango de fechas
+    """
+    initialDate = datetime.datetime.strptime(initialDate, '%Y-%m-%d')
+    finalDate = datetime.datetime.strptime(finalDate, '%Y-%m-%d')
+    return model.getAccidentsByRange(analyzer, initialDate.date(),
+                                  finalDate.date())
+
+
+def getAccidentsBySeverity(analyzer, initialDate,
+                         severity):
+    """
+    Para una fecha determinada, retorna el numero de accidentes
+    de manera organizada por su nivel de severidad.
+    """
+    initialDate = datetime.datetime.strptime(initialDate, '%Y-%m-%d')
+    return model.getCrimesBySeverity(analyzer, initialDate.date(),
+                                      severity)
